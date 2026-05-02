@@ -1,59 +1,97 @@
+{{/*  
+This script makes the assumption that every ebook file
+  has a corresponding book cover and metadata file.
 
-{/* 
-	THIS PARTIAL ITERATES OVER A DIRECTORY WITH E-BOOK FILES, IMAGES AND OPF-FILES
-	AND RETURNS A SLICE OF BOOK OBJECTS.
+  Build a slice of book objects from files in assets/boeken.
 
-	IT ASSUMES THAT EACH BOOK FILE (EPUB, PDF, DJVU, FB2, CBZ)
-	HAS A CORRESPONDING IMAGE FILE (JPG, JPEG, PNG, WEBP)
-	AND A CORRESPONDING OPF FILE WITH METADATA (OPF).
 
-	EACH BOOK OBJECT CONTAINS:
-	- bookFilePath
-	- imageFilePath
-	- extracted opf metadata (title, author, etc.)
-
+  Each object contains:
+  - bookFilePath
+  - imageFilePath
+  - metadata (parsed OPF)
 */}}
 
+
 {{- $books := slice -}}
+
+{{/* File type matchers */}}
 {{- $bookExtRegex := `(?i)\.(epub|pdf|djvu|fb2|cbz)$` -}}
 {{- $imageExtRegex := `(?i)\.(jpg|jpeg|png|webp)$` -}}
 {{- $metadataExtRegex := `(?i)\.(opf)$` -}}
 
-{{- range resources.Match "boeken/**" -}}
+{{/* Load all candidate files once (single pass input) */}}
+{{- $allFiles := resources.Match "boeken/**" -}}
 
-	{{- $bookFilePath := dict -}}
-	{{- $imageFilePath := dict -}}
-	{{- $metadata := dict -}}
+{{/* Initialize hash map to keep track of already seen books */}}
+{{- $byKey := dict -}}
 
-  	{{- if findRE $bookExtRegex .Name -}}
+{{- range $allFiles -}}
+  {{- $dir := path.Dir .Name -}}
+  {{- $base := path.Base .Name -}}
+  {{- $stem := "" -}}
 
-		{{/* Step 1: Get eBook file path */}}
-    	{{- $bookFilePath = dict "bookFilePath" .RelPermalink -}}
+  {{/* Check extensions */}}
+  {{- if findRE $bookExtRegex .Name -}}
+    {{- $stem = replaceRE $bookExtRegex "" $base -}}
+  {{- else if findRE $imageExtRegex .Name -}}
+    {{- $stem = replaceRE $imageExtRegex "" $base -}}
+  {{- else if findRE $metadataExtRegex .Name -}}
+    {{- $stem = replaceRE $metadataExtRegex "" $base -}}
+  {{- end -}}
 
-		{{/* Step 2: Get book cover and metadata file path */}}
-		{{- $bookDir := path.Dir .Name -}}
-		{{- $bookStem := path.Base (replaceRE $bookExtRegex "" .Name) -}}
-		{{- range resources.Match (printf "%s/%s.*" $bookDir $bookStem) -}}
+	
+  {{- if ne $stem "" -}} {{/* Only iterate over file with valid file extension */}}
+    {{- $key := printf "%s|%s" $dir $stem -}}
 
-			{{/* Step 2a: Book covers */}}
-			{{- if findRE $imageExtRegex .Name -}}
-    			{{- $imageFilePath =  dict "imageFilePath" .RelPermalink -}}
-  			{{- end -}}
+	{{/* If hashmap does not contain book yet, create empty record. */}}
+    {{- if not (isset $byKey $key) -}}
+      {{- $byKey = merge $byKey (dict $key (dict)) -}}
+    {{- end -}}
 
-			{{/* Step 2b: Metadata */}}
-			{{- if findRE $metadataExtRegex .Name -}}
-				{{- $parsedMetadata := transform.Unmarshal .Content -}}
-    			{{- $metadata =  dict "metadata" $parsedMetadata -}}
-  			{{- end -}}
+	 {{/* Fetch current book */}}
+    {{- $entry := index $byKey $key -}}
 
-		{{- end -}}
+	{{/* Book file: sanitize path, publish, store permalink */}}
+    {{- if findRE $bookExtRegex .Name -}}
+      {{- $safeAssetPath := replace .Name "%" "%25" -}}
+      {{- $publishedBook := resources.Copy $safeAssetPath . -}}
+      {{- $entry = merge $entry (dict "bookFilePath" $publishedBook.RelPermalink) -}}
+    {{- end -}}
 
+	{{/* Book covers: sanitize path, publish, store permalink */}}
+    {{- if findRE $imageExtRegex .Name -}}
 
+	  {{/* Convert to WebP and cap at 480w */}}
+      {{- $processedImage := . -}}
+      {{- if gt .Width 480 -}}
+        {{- $processedImage = .Resize "480x webp q78" -}}
+      {{- else -}}
+        {{- $resizeSpec := printf "%dx webp q78" .Width -}}
+        {{- $processedImage = .Resize $resizeSpec -}}
+      {{- end -}}
 
-	{{- $book := merge $bookFilePath $imageFilePath $metadata -}}
- 	{{- $books = $books | append $book -}}
+	  {{- $safeAssetPath := replace .Name "%" "%25" -}}
+  	  {{- $safeWebpPath := replaceRE $imageExtRegex ".webp" $safeAssetPath -}}
+      {{- $publishedImage := resources.Copy $safeWebpPath $processedImage -}}
+      {{- $entry = merge $entry (dict "imageFilePath" $publishedImage.RelPermalink) -}}
+    {{- end -}}
 
-	{{- end -}}
+	{{/* Metadata file: parse OPF XML and store parsed object */}}
+    {{- if findRE $metadataExtRegex .Name -}}
+      {{- $parsedMetadata := transform.Unmarshal .Content -}}
+      {{- $entry = merge $entry (dict "metadata" $parsedMetadata) -}}
+    {{- end -}}
+
+	 {{/* Write resulting entry into lookup map */}}
+    {{- $byKey = merge $byKey (dict $key $entry) -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* Range over resulting map. Only keep entries with .bookFilePath */}}
+{{- range $k, $entry := $byKey -}}
+  {{- if isset $entry "bookFilePath" -}}
+    {{- $books = $books | append $entry -}}
+  {{- end -}}
 {{- end -}}
 
 {{- return $books -}}
