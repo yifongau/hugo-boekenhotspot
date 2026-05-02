@@ -1,0 +1,59 @@
+
+{/* 
+	THIS PARTIAL ITERATES OVER A DIRECTORY WITH E-BOOK FILES, IMAGES AND OPF-FILES
+	AND RETURNS A SLICE OF BOOK OBJECTS.
+
+	IT ASSUMES THAT EACH BOOK FILE (EPUB, PDF, DJVU, FB2, CBZ)
+	HAS A CORRESPONDING IMAGE FILE (JPG, JPEG, PNG, WEBP)
+	AND A CORRESPONDING OPF FILE WITH METADATA (OPF).
+
+	EACH BOOK OBJECT CONTAINS:
+	- bookFilePath
+	- imageFilePath
+	- extracted opf metadata (title, author, etc.)
+
+*/}}
+
+{{- $books := slice -}}
+{{- $bookExtRegex := `(?i)\.(epub|pdf|djvu|fb2|cbz)$` -}}
+{{- $imageExtRegex := `(?i)\.(jpg|jpeg|png|webp)$` -}}
+{{- $metadataExtRegex := `(?i)\.(opf)$` -}}
+
+{{- range resources.Match "boeken/**" -}}
+
+	{{- $bookFilePath := dict -}}
+	{{- $imageFilePath := dict -}}
+	{{- $metadata := dict -}}
+
+  	{{- if findRE $bookExtRegex .Name -}}
+
+		{{/* Step 1: Get eBook file path */}}
+    	{{- $bookFilePath = dict "bookFilePath" .RelPermalink -}}
+
+		{{/* Step 2: Get book cover and metadata file path */}}
+		{{- $bookDir := path.Dir .Name -}}
+		{{- $bookStem := path.Base (replaceRE $bookExtRegex "" .Name) -}}
+		{{- range resources.Match (printf "%s/%s.*" $bookDir $bookStem) -}}
+
+			{{/* Step 2a: Book covers */}}
+			{{- if findRE $imageExtRegex .Name -}}
+    			{{- $imageFilePath =  dict "imageFilePath" .RelPermalink -}}
+  			{{- end -}}
+
+			{{/* Step 2b: Metadata */}}
+			{{- if findRE $metadataExtRegex .Name -}}
+				{{- $parsedMetadata := transform.Unmarshal .Content -}}
+    			{{- $metadata =  dict "metadata" $parsedMetadata -}}
+  			{{- end -}}
+
+		{{- end -}}
+
+
+
+	{{- $book := merge $bookFilePath $imageFilePath $metadata -}}
+ 	{{- $books = $books | append $book -}}
+
+	{{- end -}}
+{{- end -}}
+
+{{- return $books -}}

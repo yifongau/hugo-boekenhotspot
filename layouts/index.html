@@ -1,0 +1,36 @@
+{{- $books := partial "books-data.html" . -}}
+
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	{{ $style := resources.Get "style.css" | fingerprint }}
+	<link rel="stylesheet" type="text/css" href="{{ $style.RelPermalink }}">
+
+	{{ $script := resources.Get "script.js" | fingerprint }}
+	<script src="{{ $script.RelPermalink }}"></script>
+
+	<title>{{ .Site.Title }}</title>
+</head>
+
+
+<body>
+
+	<header>
+		<h1>{{ .Site.Title }}</h1>
+	</header>
+
+	<main>
+		<div id="books-grid"></div>
+	</main>
+
+	<script>
+		const books = {{ $books | jsonify | safeJS }};
+		renderBooksGrid(books, "books-grid");
+	</script>
+</body>
+
+</html>
