@@ -33,11 +33,5 @@ function renderBooksGrid(books, booksGridId) {
 
     console.log("Book files:", books);
 
-    books.forEach((book) => {
-        if (!book.bookFilePath) console.log(book);
-        if (!book.imageFilePath) console.log(book);
-        if (!book.metadata) console.log(book);
-    });
-
-
 }
+
