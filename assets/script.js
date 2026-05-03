@@ -10,8 +10,6 @@ function initializeBooksGrid(books, booksGridId) {
     // Iterate over list of books and populate the books grid
     function renderBooks(list) {
         booksGrid.replaceChildren();
-        
-        console.log("Books shown:", list);
         list.forEach((book) => {
 
             // Construct link element
@@ -37,19 +35,40 @@ function initializeBooksGrid(books, booksGridId) {
             booksGrid.appendChild(item);
         });
 
-      
+
     }
 
     // Filter list of books
     function filterBooksByQuery(list, query) {
         if (!query) return list
 
-        // AND search: every token must match somewhere in the book text
-        const tokens = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
+        // Normalize: lowercase, trim, remove accents
+        const normalizedQuery = query
+            .toLowerCase()
+            .trim()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
 
-     
+        // Don't filter on very short queries
+        if (normalizedQuery.length < 3) return list;
+
+        // AND search: every token must match somewhere in the book text
+        const tokens = normalizedQuery.toLowerCase().trim().split(/\s+/).filter(Boolean);
+
+        // Perform search
+        return list.filter((book) =>
+            tokens.every((token) => book.searchText.includes(token))
+        );
+
 
     }
+
+    // Normalize book.searchText, as we can't do it in Hugo build.
+    books.forEach((book) => {
+        book.searchText = (book.searchText || "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
+    });
 
     // Initial state: no query yet, so render all books
     renderBooks(filterBooksByQuery(books, ""));
@@ -61,7 +80,7 @@ function initializeBooksGrid(books, booksGridId) {
     if (searchInput) {
         searchInput.addEventListener("input", (event) => {
             const query = event.target.value;
-            console.log("User typed:", query);
+            renderBooks(filterBooksByQuery(books, query))
         });
     }
 

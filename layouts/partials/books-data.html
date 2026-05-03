@@ -89,10 +89,44 @@ This script makes the assumption that every ebook file
 
 {{/* Range over resulting map. Only keep entries with .bookFilePath */}}
 {{- range $k, $entry := $byKey -}}
-  {{- if and (isset $entry "bookFilePath") (isset $entry "imageFilePath") (isset $entry "metadata") -}}
+  {{- if and 
+	(isset $entry "bookFilePath") 
+	(isset $entry "imageFilePath") 
+	(isset $entry "metadata") 
+  -}}
+
+  	{{/* Build searchableText before appending to list */}}
+	{{- $title := lower (default "" $entry.metadata.metadata.title) -}}
+	{{- $creators := "" -}}
+
+	{{/* Range over creators */}}
+	{{- $creatorsJSON := $entry.metadata.metadata.creator -}}
+	{{- if reflect.IsSlice $creatorsJSON -}}
+  		{{- range $creatorsJSON -}}
+    		{{- $name := lower (default "" (index . "#text")) -}}
+    		{{- if ne $name "" -}}
+      			{{- $creators = printf "%s %s" $creators $name -}}
+    		{{- end -}}
+  		{{- end -}}
+	{{- else -}}
+  		{{- $creators = lower (default "" (index $creatorsJSON "#text")) -}}
+	{{- end -}}
+
+	{{- $searchText := strings.TrimSpace (printf "%s %s" $title $creators) -}}
+	{{- $entry = merge $entry (dict "searchText" $searchText) -}}	
+
     {{- $books = $books | append $entry -}}
+
   {{- else -}}
-      {{- warnf "Incomplete book entry '%s': bookFilePath=%v, imageFilePath=%v, metadata=%v" $k (isset $entry "bookFilePath") (isset $entry "imageFilePath") (isset $entry "metadata") -}}
+
+      {{- warnf 
+		  "Incomplete book entry '%s': bookFilePath=%v, imageFilePath=%v, metadata=%v" 
+	      $k 
+		  (isset $entry "bookFilePath") 
+		  (isset $entry "imageFilePath") 
+		  (isset $entry "metadata") 
+	  -}}
+
   {{- end -}}
 {{- end -}}
 
