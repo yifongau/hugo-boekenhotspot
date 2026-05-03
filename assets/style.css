@@ -1,5 +1,5 @@
 :root {
-	--page-gutter: clamp(36px, 8vw, 132px);
+    --page-gutter: clamp(36px, 8vw, 132px);
 }
 
 body {
@@ -81,6 +81,18 @@ main {
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 	position: relative;
 	transition: transform 180ms ease, box-shadow 180ms ease;
+	animation: cardIn 500ms ease-out both;
+}
+
+@keyframes cardIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .book-card:hover {
@@ -125,6 +137,8 @@ main {
 .search-box {
 	display: flex;
 	justify-content: center;
+	align-items: stretch; /* make children match height */
+    gap: 10px;
 }
 
 .search-input {
@@ -147,4 +161,47 @@ main {
 	outline: none;
 	background: rgba(255, 255, 255, 0.12);
 	border-color: rgba(255, 255, 255, 0.3);
+}
+
+.shuffle-btn {
+    padding: 0 6px;          /* no box look, but keeps click area usable */
+    margin-left: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    color: #f7f7f7;          /* brighter than background */
+    cursor: pointer;
+    opacity: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.shuffle-btn svg {
+    width: 30px;
+    height: 30px;
+    display: block;
+}
+
+.shuffle-btn .die-face {
+    fill: #bcbcbc;
+    stroke: #c6c6c6;
+    stroke-width: 2;
+}
+
+.shuffle-btn .die-pip {
+    fill: #3a3a3a;
+}
+
+.shuffle-btn:hover {
+    transform: rotate(-12deg) scale(1.08);
+}
+
+.shuffle-btn:hover .die-face {
+    fill: #d7d7d7;
+    stroke: #eeeeee;
+}
+
+.shuffle-btn:hover .die-pip {
+    fill: #222222;
 }

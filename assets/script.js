@@ -63,6 +63,16 @@ function initializeBooksGrid(books, booksGridId) {
 
     }
 
+    // Shuffle books in-place on first load (Fisher-Yates)
+    function shuffleList(list) {
+        const arr = [...list];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
     // Normalize book.searchText, as we can't do it in Hugo build.
     books.forEach((book) => {
         book.searchText = (book.searchText || "")
@@ -71,7 +81,7 @@ function initializeBooksGrid(books, booksGridId) {
     });
 
     // Initial state: no query yet, so render all books
-    renderBooks(filterBooksByQuery(books, ""));
+    renderBooks(filterBooksByQuery(shuffleList(books)));
 
 
     // Each time search input changes, rerender books
@@ -84,7 +94,14 @@ function initializeBooksGrid(books, booksGridId) {
         });
     }
 
-
+    // When clicking shuffle button, rerender randomnized book grid
+    const shuffleBtn = document.querySelector(".shuffle-btn");
+    if (shuffleBtn) {
+        shuffleBtn.addEventListener("click", () => {
+            if (searchInput) searchInput.value = "";
+            renderBooks(shuffleList(books));
+        });
+    }
 
 
 
