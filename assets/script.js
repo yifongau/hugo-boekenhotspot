@@ -5,10 +5,16 @@ function initializeBooksGrid(books, booksGridId) {
         throw new Error(`${booksGridId} element not found`);
     }
 
-
+    let lastRenderedSignature = "";
 
     // Iterate over list of books and populate the books grid
     function renderBooks(list) {
+
+        // Check current state
+        const nextSignature = list.map((book) => book.bookFilePath).join("\u001F");
+        if (nextSignature === lastRenderedSignature) return; // nothing changed
+        lastRenderedSignature = nextSignature;
+
         booksGrid.replaceChildren();
         list.forEach((book) => {
 
