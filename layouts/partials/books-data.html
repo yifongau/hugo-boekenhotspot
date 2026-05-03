@@ -76,7 +76,7 @@ This script makes the assumption that every ebook file
       {{- $entry = merge $entry (dict "imageFilePath" $publishedImage.RelPermalink) -}}
     {{- end -}}
 
-	{{/* Metadata file: parse OPF XML and store parsed object */}}
+	{{/* Book metadata: parse OPF XML and store parsed object */}}
     {{- if findRE $metadataExtRegex .Name -}}
       {{- $parsedMetadata := transform.Unmarshal .Content -}}
       {{- $entry = merge $entry (dict "metadata" $parsedMetadata) -}}
@@ -89,8 +89,10 @@ This script makes the assumption that every ebook file
 
 {{/* Range over resulting map. Only keep entries with .bookFilePath */}}
 {{- range $k, $entry := $byKey -}}
-  {{- if isset $entry "bookFilePath" -}}
+  {{- if and (isset $entry "bookFilePath") (isset $entry "imageFilePath") (isset $entry "metadata") -}}
     {{- $books = $books | append $entry -}}
+  {{- else -}}
+      {{- warnf "Incomplete book entry '%s': bookFilePath=%v, imageFilePath=%v, metadata=%v" $k (isset $entry "bookFilePath") (isset $entry "imageFilePath") (isset $entry "metadata") -}}
   {{- end -}}
 {{- end -}}
 
