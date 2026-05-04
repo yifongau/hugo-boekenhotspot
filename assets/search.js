@@ -1,28 +1,20 @@
-function normalizeText(text) {
-    return (text || "")
-        .toLowerCase()
-        .trim()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "");
+import Fuse from "fuse.js";
+
+export function createFuseIndex(books) {
+    
+    const options = {
+        keys: [
+            "metadata.metadata.title",
+            "metadata.metadata.creator"
+        ],
+        threshold: 0.4, // adjust for fuzziness (lower = stricter)
+        ignoreLocation: true,
+        minMatchCharLength: 2,
+    };
+    return new Fuse(books,options);
 }
 
-export function normalizeSearchText(books) {
-    console.log(books)
-    books.forEach((book) => {
-        book.searchText = normalizeText(book.searchText);
-    });
+export function filterBooksByQuery(list, fuse, query) {
+     if (!fuse || !query || query.trim().length < 3) return list;
+    return fuse.search(query).map(result => result.item);
 }
-
-export function filterBooksByQuery(list, query) {
-    if (!query) return list;
-
-    const normalizedQuery = normalizeText(query);
-    if (normalizedQuery.length < 3) return list;
-
-    const tokens = normalizedQuery.split(/\s+/).filter(Boolean);
-
-    return list.filter((book) =>
-        tokens.every((token) => book.searchText.includes(token))
-    );
-}
-

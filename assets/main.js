@@ -1,4 +1,4 @@
-import { filterBooksByQuery, normalizeSearchText } from "./search.js";
+import { createFuseIndex, filterBooksByQuery } from "./search.js";
 
 function initializeBooksGrid(booksGridId) {
 
@@ -93,34 +93,34 @@ function initializeBooksGrid(booksGridId) {
     // Retrieve books from #books-data.
     const books = JSON.parse(document.getElementById("books-data").textContent);
 
-    // One time normalize book.searchText, as we can't do it in Hugo build.
-    normalizeSearchText(books)
 
     // Shuffle books for initial render.
     let shuffledBooks = shuffleList(books);
 
-    // Initial render, as search query is empty it shows all books.
-    renderBooks(filterBooksByQuery(shuffledBooks));
-    setupCenterObserver();
-
+    // Initial render, simply show all books without filter
+    renderBooks(shuffledBooks);
 
     // Initialize listeners and InterSectionObserver
     // for search bar, shuffle button and book highlighting on mobile.
+    setupCenterObserver();
+
     const searchInput = document.querySelector(".search-input");
+    let fuse = createFuseIndex(books);
 
     if (searchInput) {
         searchInput.addEventListener("input", (event) => {
             const query = event.target.value;
-            renderBooks(filterBooksByQuery(shuffledBooks, query))
+            renderBooks(filterBooksByQuery(shuffledBooks, fuse, query))
         });
     }
 
     const shuffleBtn = document.querySelector(".shuffle-btn");
     if (shuffleBtn) {
         shuffleBtn.addEventListener("click", () => {
+            // On shuffle, reset filter, show newly shuffled book list
             if (searchInput) searchInput.value = "";
             shuffledBooks = shuffleList(books)
-            renderBooks(shuffledBooks);
+            renderBooks(shuffledBooks); 
         });
     }
 
