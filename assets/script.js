@@ -5,7 +5,11 @@ function initializeBooksGrid(books, booksGridId) {
         throw new Error(`${booksGridId} element not found`);
     }
 
+    // Signature for comparing qeury result with rendered result.
     let lastRenderedSignature = "";
+
+    // Initialize book list in shuffled state.
+    let shuffledBooks = shuffleList(books);
 
     // Iterate over list of books and populate the books grid
     function renderBooks(list) {
@@ -87,7 +91,7 @@ function initializeBooksGrid(books, booksGridId) {
     });
 
     // Initial state: no query yet, so render all books
-    renderBooks(filterBooksByQuery(shuffleList(books)));
+    renderBooks(filterBooksByQuery(shuffledBooks));
 
 
     // Each time search input changes, rerender books
@@ -96,7 +100,7 @@ function initializeBooksGrid(books, booksGridId) {
     if (searchInput) {
         searchInput.addEventListener("input", (event) => {
             const query = event.target.value;
-            renderBooks(filterBooksByQuery(books, query))
+            renderBooks(filterBooksByQuery(shuffledBooks, query))
         });
     }
 
@@ -105,7 +109,8 @@ function initializeBooksGrid(books, booksGridId) {
     if (shuffleBtn) {
         shuffleBtn.addEventListener("click", () => {
             if (searchInput) searchInput.value = "";
-            renderBooks(shuffleList(books));
+            shuffledBooks = shuffleList(books)
+            renderBooks(shuffledBooks);
         });
     }
 
