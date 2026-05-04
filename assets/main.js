@@ -1,12 +1,6 @@
-function initializeBooksGrid(books, booksGridId) {
+import { filterBooksByQuery, normalizeSearchText } from "./search.js";
 
-    // Validate booksGrid exists.
-    const booksGrid = document.getElementById(booksGridId);
-
-    if (!booksGrid) {
-        throw new Error(`${booksGridId} element not found`);
-    }
-
+function initializeBooksGrid(booksGridId) {
 
     // FUNCTION DECLARATIONS
 
@@ -59,31 +53,6 @@ function initializeBooksGrid(books, booksGridId) {
 
     }
 
-    // Filters a list based on query string.
-    function filterBooksByQuery(list, query) {
-        if (!query) return list
-
-        // Normalize: lowercase, trim, remove accents
-        const normalizedQuery = query
-            .toLowerCase()
-            .trim()
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "");
-
-        // Don't filter on very short queries
-        if (normalizedQuery.length < 3) return list;
-
-        // AND search: every token must match somewhere in the book text
-        const tokens = normalizedQuery.toLowerCase().trim().split(/\s+/).filter(Boolean);
-
-        // Perform search
-        return list.filter((book) =>
-            tokens.every((token) => book.searchText.includes(token))
-        );
-
-
-    }
-
     // Observes book cards and adds book highlighting 
     // when book card intersects center band.
     let centerObserver = null;
@@ -114,13 +83,18 @@ function initializeBooksGrid(books, booksGridId) {
 
     // MAIN
 
-    // One time normalize book.searchText, as we can't do it in Hugo build.
-    books.forEach((book) => {
-        book.searchText = (book.searchText || "")
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "");
-    });
+    // Sanity check booksGrid.   
+    const booksGrid = document.getElementById(booksGridId);
 
+    if (!booksGrid) {
+        throw new Error(`${booksGridId} element not found`);
+    }
+
+    // Retrieve books from #books-data.
+    const books = JSON.parse(document.getElementById("books-data").textContent);
+
+    // One time normalize book.searchText, as we can't do it in Hugo build.
+    normalizeSearchText(books)
 
     // Shuffle books for initial render.
     let shuffledBooks = shuffleList(books);
@@ -156,4 +130,8 @@ function initializeBooksGrid(books, booksGridId) {
 
 
 }
+
+
+initializeBooksGrid("books-grid");
+
 

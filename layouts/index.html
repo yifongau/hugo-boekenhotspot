@@ -10,8 +10,12 @@
 	{{ $style := resources.Get "style.css" | fingerprint }}
 	<link rel="stylesheet" type="text/css" href="{{ $style.RelPermalink }}">
 
-	{{ $script := resources.Get "script.js" | fingerprint }}
-	<script src="{{ $script.RelPermalink }}"></script>
+	{{ $script := resources.Get "main.js" | js.Build | fingerprint }}
+	<script src="{{ $script.RelPermalink }}" type="module"></script>
+
+	<script type="application/json" id="books-data">
+  	{{ $books }}
+	</script>
 
 	<title>{{ .Site.Title }}</title>
 </head>
@@ -38,16 +42,12 @@
 	</header>
 
 	<main>
-
-
-
+		{{/* Load $books into attribute */}}
 		<div id="books-grid"></div>
 	</main>
 
-	<script>
-		const books = {{ $books | jsonify | safeJS }};
-		initializeBooksGrid(books, "books-grid");
-	</script>
+
+
 </body>
 
 </html>
