@@ -81,19 +81,8 @@ main {
 	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 1px 4px rgba(0, 0, 0, 0.25);
 	position: relative;
 	transition: transform 180ms ease, box-shadow 180ms ease;
-	animation: cardIn 500ms ease-out both;
 }
 
-@keyframes cardIn {
-    from {
-        opacity: 0;
-        transform: translateY(12px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 
 
 /* Book highlighting effects */
