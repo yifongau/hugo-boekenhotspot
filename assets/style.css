@@ -95,21 +95,38 @@ main {
     }
 }
 
-.book-card:hover {
-	transform: translateY(-5px);
-	box-shadow: 0 0 30px rgba(200, 200, 200, 0.15);
+
+/* Book highlighting effects */
+
+@media (hover: hover) and (pointer: fine) { /* Desktop only: real hover devices */
+  .book-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 30px rgba(200, 200, 200, 0.15);
+  }
+
+  .book-card:hover .book-cover {
+    filter: saturate(1) brightness(1.05);
+  }
 }
 
-.book-card:hover .book-cover {
-	filter: saturate(1.00) brightness(1.05);
+
+.book-card.is-center { /* Mobile/Touch: JS toggles these classes */
+  transform: translateY(-5px);
+  box-shadow: 0 0 30px rgba(200, 200, 200, 0.15);
 }
+
+.book-card.is-center .book-cover {
+  filter: saturate(1) brightness(1.05);
+}
+
+
+/* Page header and its widgets */
 
 .page-header,
 #books-grid {
     max-width: 1320px;
     margin-inline: auto;
 }
-
 
 .page-header {
     position: sticky;

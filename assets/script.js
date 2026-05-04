@@ -1,17 +1,28 @@
 function initializeBooksGrid(books, booksGridId) {
+
+    // Validate booksGrid exists.
     const booksGrid = document.getElementById(booksGridId);
 
     if (!booksGrid) {
         throw new Error(`${booksGridId} element not found`);
     }
 
-    // Signature for comparing qeury result with rendered result.
+
+    // FUNCTION DECLARATIONS
+
+    // Shuffles a list.
+    function shuffleList(list) {
+        const arr = [...list];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+
+    // Iterates over list and renders book cards.
     let lastRenderedSignature = "";
-
-    // Initialize book list in shuffled state.
-    let shuffledBooks = shuffleList(books);
-
-    // Iterate over list of books and populate the books grid
     function renderBooks(list) {
 
         // Check current state
@@ -48,7 +59,7 @@ function initializeBooksGrid(books, booksGridId) {
 
     }
 
-    // Filter list of books
+    // Filters a list based on query string.
     function filterBooksByQuery(list, query) {
         if (!query) return list
 
@@ -73,28 +84,54 @@ function initializeBooksGrid(books, booksGridId) {
 
     }
 
-    // Shuffle books in-place on first load (Fisher-Yates)
-    function shuffleList(list) {
-        const arr = [...list];
-        for (let i = arr.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-        return arr;
+    // Observes book cards and adds book highlighting 
+    // when book card intersects center band.
+    let centerObserver = null;
+
+    function setupCenterObserver() {
+        // Skip on desktop-hover devices
+        if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+        if (centerObserver) centerObserver.disconnect();
+
+        centerObserver = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    entry.target.classList.toggle("is-center", entry.isIntersecting);
+                });
+            },
+            {
+                root: null,
+                // Only a center strip (~20% viewport height) is "active"
+                rootMargin: "-40% 0px -40% 0px",
+                threshold: 0
+            }
+        );
+
+        booksGrid.querySelectorAll(".book-card").forEach((card) => centerObserver.observe(card));
     }
 
-    // Normalize book.searchText, as we can't do it in Hugo build.
+
+    // MAIN
+
+    // One time normalize book.searchText, as we can't do it in Hugo build.
     books.forEach((book) => {
         book.searchText = (book.searchText || "")
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, "");
     });
 
-    // Initial state: no query yet, so render all books
+
+    // Shuffle books for initial render.
+    let shuffledBooks = shuffleList(books);
+
+    // Initial render, as search query is empty it shows all books.
     renderBooks(filterBooksByQuery(shuffledBooks));
+    setupCenterObserver();
 
 
-    // Each time search input changes, rerender books
+    // Initialize listeners and InterSectionObserver
+    // for search bar, shuffle button and book highlighting on mobile.
     const searchInput = document.querySelector(".search-input");
 
     if (searchInput) {
@@ -104,7 +141,6 @@ function initializeBooksGrid(books, booksGridId) {
         });
     }
 
-    // When clicking shuffle button, rerender randomnized book grid
     const shuffleBtn = document.querySelector(".shuffle-btn");
     if (shuffleBtn) {
         shuffleBtn.addEventListener("click", () => {
@@ -113,7 +149,6 @@ function initializeBooksGrid(books, booksGridId) {
             renderBooks(shuffledBooks);
         });
     }
-
 
 
 
