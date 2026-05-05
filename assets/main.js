@@ -18,7 +18,6 @@ function initializeBooksGrid(booksGridId) {
     // Iterates over list and renders book cards.
     let lastRenderedSignature = "";
     function renderBooks(list) {
-        console.log(list)
 
         // Check current state
         const nextSignature = list.map((book) => book.bookFilePath).join("\u001F");
@@ -32,6 +31,7 @@ function initializeBooksGrid(booksGridId) {
             const link = document.createElement("a");
             link.className = "book-card";
             link.href = book.bookFilePath;
+            link.dataset.ext = book.ext;
             link.target = "_blank"; // Open in new tab
             link.rel = "noopener noreferrer"; // Security best practice
 
@@ -105,10 +105,17 @@ function initializeBooksGrid(booksGridId) {
     booksGrid.addEventListener("click", (event) => {
         const link = event.target.closest(".book-card");
         if (!link) return;
-        event.preventDefault();
-        const ext = link.href
-        console.log(ext)
-       
+        //event.preventDefault();
+        const ext = link.dataset.ext;
+
+        if (ext === ".epub") {
+            event.preventDefault();
+            
+        } else if (ext === ".djvu") {
+            event.preventDefault();
+
+        } 
+
     });
 
 
