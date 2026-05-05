@@ -31,7 +31,7 @@ function initializeBooksGrid(booksGridId) {
             const link = document.createElement("a");
             link.className = "book-card";
             link.href = book.bookFilePath;
-            link.dataset.ext = book.ext;
+            link.dataset.id = book.id
             link.target = "_blank"; // Open in new tab
             link.rel = "noopener noreferrer"; // Security best practice
 
@@ -52,6 +52,14 @@ function initializeBooksGrid(booksGridId) {
         });
 
 
+    }
+
+    // Function to open the modal with book data
+    function showBookModal(title, author, ext) {
+        document.getElementById('modal-title').textContent = title;
+        document.getElementById('modal-author').textContent = author;
+        document.getElementById('modal-formats').textContent = ext;
+        document.getElementById('book-modal').hidden = false;
     }
 
     // Observes book cards and adds book highlighting 
@@ -96,12 +104,43 @@ function initializeBooksGrid(booksGridId) {
 
 
     // Shuffle books for initial render.
+    const bookMap = Object.fromEntries(books.map(book => [book.id, book]))
     let shuffledBooks = shuffleList(books);
 
     // Initial render, simply show all books without filter
     renderBooks(shuffledBooks);
 
+
+    // Initialize eventListeners for book library index card
+    booksGrid.addEventListener("click", (event) => {
+        const link = event.target.closest(".book-card");
+        if (!link) return;
+        event.preventDefault();
+
+        const title = "De bijbel";;
+        const author = "Jan Janssen";
+        const ext = link.dataset.ext;
+
+        document.getElementById('modal-title').textContent = title;
+        document.getElementById('modal-author').textContent = author;
+        document.getElementById('modal-formats').textContent = ext;
+        document.getElementById('book-modal').hidden = false;
+
+    });
+
+    // Close modal on X or background click
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('book-modal');
+        const closeBtn = document.getElementById('modal-close');
+        closeBtn.addEventListener('click', () => { modal.hidden = true; });
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.hidden = true;
+        });
+    });
+
+
     // Initialize eventListener for document handling (pdf, epub, djvu)
+    /*
     booksGrid.addEventListener("click", (event) => {
         const link = event.target.closest(".book-card");
         if (!link) return;
@@ -117,6 +156,7 @@ function initializeBooksGrid(booksGridId) {
         } 
 
     });
+    */
 
 
     // Initialize eventListeners for search bar and shuffle button.

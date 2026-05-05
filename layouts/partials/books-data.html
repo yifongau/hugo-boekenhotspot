@@ -14,6 +14,7 @@ This script makes the assumption that every ebook file
 
 {{- $books := slice -}}
 
+
 {{/* File type matchers */}}
 {{- $bookExtRegex := `(?i)\.(epub|pdf|djvu|fb2|cbz)$` -}}
 {{- $imageExtRegex := `(?i)\.(jpg|jpeg|png|webp)$` -}}
@@ -48,8 +49,10 @@ This script makes the assumption that every ebook file
       {{- $byKey = merge $byKey (dict $key (dict)) -}}
     {{- end -}}
 
-	 {{/* Fetch current book */}}
-    {{- $entry := index $byKey $key -}}
+  {{/* Fetch current book */}}
+  {{- $entry := index $byKey $key -}}
+  {{- $id := sha1 $key -}}
+  {{- $entry = merge $entry (dict "id" $id) -}}
 
 	{{/* Book file: sanitize path, publish, store permalink and file extension */}}
     {{- if findRE $bookExtRegex .Name -}}

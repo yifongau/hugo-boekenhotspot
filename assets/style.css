@@ -1,3 +1,4 @@
+* { box-sizing: border-box; }
 :root {
     --page-gutter: clamp(36px, 8vw, 132px);
 }
@@ -10,6 +11,9 @@ main {
 	margin-left: var(--page-gutter);
 	margin-right: var(--page-gutter);
 }
+
+
+/* Books grid elements */
 
 #books-grid {
 	display: grid;
@@ -106,6 +110,81 @@ main {
 
 .book-card.is-center .book-cover {
   filter: saturate(1) brightness(1.05);
+}
+
+
+/* Book metadata modal */
+
+.modal {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: fixed;
+	z-index: 2000;
+	left: 0; top: 0; width: 100vw; height: 100vh;
+	background: rgba(0,0,0,0.5);
+	padding: 4vw;
+}
+
+.modal[hidden] {
+  display: none;
+}
+
+.modal-content {
+  background-color: #fffdfa;
+  border: 1.5px solid #d2b48c;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  font-family: 'Courier New', Courier, monospace;
+  border-radius: 0;
+  aspect-ratio: 5 / 3;
+  width: clamp(320px, 60vw, 600px);
+  max-width: 98vw;
+  display: flex;
+  flex-direction: column;
+	justify-content: flex-start;
+  align-items: flex-start;
+  padding: 2em 2em;
+  margin: min(4vw, 32px) auto 0 auto;
+	line-height: 1.5;
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.5em; right: 0.5em;
+  font-size: 2em;
+  color: #888;
+  cursor: pointer;
+	font-family: inherit;
+	background: none;
+	border: none;
+	line-height: 1;
+	padding: 0;
+	transition: color 0.2s;
+}
+
+.modal-close:hover {
+	color: #b71c1c;
+}
+
+
+/* Card details styling */
+#modal-title {
+	font-size: 1.3em;
+	font-weight: bold;
+	margin-top: 0em;
+	margin-bottom: 0.5em;
+	letter-spacing: 0.02em;
+}
+
+.modal-content p {
+	margin: 0.4em 0;
+	font-size: 1em;
+	letter-spacing: 0.01em;
+}
+
+.modal-content strong {
+	color: #795548;
+	font-weight: 600;
 }
 
 
