@@ -51,11 +51,12 @@ This script makes the assumption that every ebook file
 	 {{/* Fetch current book */}}
     {{- $entry := index $byKey $key -}}
 
-	{{/* Book file: sanitize path, publish, store permalink */}}
+	{{/* Book file: sanitize path, publish, store permalink and file extension */}}
     {{- if findRE $bookExtRegex .Name -}}
       {{- $safeAssetPath := replace .Name "%" "%25" -}}
       {{- $publishedBook := resources.Copy $safeAssetPath . -}}
-      {{- $entry = merge $entry (dict "bookFilePath" $publishedBook.RelPermalink) -}}
+      {{- $ext := path.Ext $publishedBook.RelPermalink -}}
+      {{- $entry = merge $entry (dict "bookFilePath" $publishedBook.RelPermalink "ext" $ext) -}}
     {{- end -}}
 
 	{{/* Book covers: sanitize path, publish, store permalink */}}
