@@ -18,6 +18,7 @@ function initializeBooksGrid(booksGridId) {
     // Iterates over list and renders book cards.
     let lastRenderedSignature = "";
     function renderBooks(list) {
+        console.log(list)
 
         // Check current state
         const nextSignature = list.map((book) => book.bookFilePath).join("\u001F");
@@ -100,10 +101,18 @@ function initializeBooksGrid(booksGridId) {
     // Initial render, simply show all books without filter
     renderBooks(shuffledBooks);
 
-    // Initialize listeners and InterSectionObserver
-    // for search bar, shuffle button and book highlighting on mobile.
-    setupCenterObserver();
+    // Initialize eventListener for document handling (pdf, epub, djvu)
+    booksGrid.addEventListener("click", (event) => {
+        const link = event.target.closest(".book-card");
+        if (!link) return;
+        event.preventDefault();
+        const ext = link.href
+        console.log(ext)
+       
+    });
 
+
+    // Initialize eventListeners for search bar and shuffle button.
     const searchInput = document.querySelector(".search-input");
     let fuse = createFuseIndex(books);
 
@@ -114,16 +123,20 @@ function initializeBooksGrid(booksGridId) {
         });
     }
 
+
     const shuffleBtn = document.querySelector(".shuffle-btn");
     if (shuffleBtn) {
         shuffleBtn.addEventListener("click", () => {
             // On shuffle, reset filter, show newly shuffled book list
             if (searchInput) searchInput.value = "";
             shuffledBooks = shuffleList(books)
-            renderBooks(shuffledBooks); 
+            renderBooks(shuffledBooks);
+
         });
     }
 
+    // Initialize intersectionObserver for mobile book highlighting.
+    setupCenterObserver();
 
 
 
