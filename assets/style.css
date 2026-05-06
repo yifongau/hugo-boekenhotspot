@@ -15,6 +15,10 @@ main {
 	margin-right: var(--page-gutter);
 }
 
+img.icon-filter {
+  filter: invert(1) brightness(1);
+}
+
 
 /* Books grid elements */
 
