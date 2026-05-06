@@ -54,14 +54,6 @@ function initializeBooksGrid(booksGridId) {
 
     }
 
-    // Function to open the modal with book data
-    function showBookModal(title, author, ext) {
-        document.getElementById('modal-title').textContent = title;
-        document.getElementById('modal-author').textContent = author;
-        document.getElementById('modal-formats').textContent = ext;
-        document.getElementById('book-modal').hidden = false;
-    }
-
     // Observes book cards and adds book highlighting 
     // when book card intersects center band.
     let centerObserver = null;
@@ -124,11 +116,14 @@ function initializeBooksGrid(booksGridId) {
         const title = book.rawMetadata.metadata.title;
         const author = book.creatorString;
         const ext = book.ext;
+        const img = book.imageFilePath
 
-        document.getElementById('modal-title').textContent = title;
-        document.getElementById('modal-author').textContent = author;
-        document.getElementById('modal-formats').textContent = ext;
+     //   document.getElementById('modal-title').textContent = title;
+     //   document.getElementById('modal-author').textContent = author;
+     //   document.getElementById('modal-formats').textContent = ext;
         document.getElementById('book-modal').hidden = false;
+
+        document.getElementById('modal-image').src = book.imageFilePath;
 
     });
 
@@ -136,7 +131,6 @@ function initializeBooksGrid(booksGridId) {
     document.addEventListener('DOMContentLoaded', function () {
         const modal = document.getElementById('book-modal');
         const closeBtn = document.getElementById('modal-close');
-        closeBtn.addEventListener('click', () => { modal.hidden = true; });
         modal.addEventListener('click', (e) => {
             if (e.target === modal) modal.hidden = true;
         });

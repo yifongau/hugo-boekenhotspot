@@ -1,6 +1,9 @@
-* { box-sizing: border-box; }
+* {
+	box-sizing: border-box;
+}
+
 :root {
-    --page-gutter: clamp(36px, 8vw, 132px);
+	--page-gutter: clamp(36px, 8vw, 132px);
 }
 
 body {
@@ -91,25 +94,28 @@ main {
 
 /* Book highlighting effects */
 
-@media (hover: hover) and (pointer: fine) { /* Desktop only: real hover devices */
-  .book-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 30px rgba(200, 200, 200, 0.15);
-  }
+@media (hover: hover) and (pointer: fine) {
 
-  .book-card:hover .book-cover {
-    filter: saturate(1) brightness(1.05);
-  }
+	/* Desktop only: real hover devices */
+	.book-card:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 0 30px rgba(200, 200, 200, 0.15);
+	}
+
+	.book-card:hover .book-cover {
+		filter: saturate(1) brightness(1.05);
+	}
 }
 
 
-.book-card.is-center { /* Mobile/Touch: JS toggles these classes */
-  transform: translateY(-5px);
-  box-shadow: 0 0 30px rgba(200, 200, 200, 0.15);
+.book-card.is-center {
+	/* Mobile/Touch: JS toggles these classes */
+	transform: translateY(-5px);
+	box-shadow: 0 0 30px rgba(200, 200, 200, 0.15);
 }
 
 .book-card.is-center .book-cover {
-  filter: saturate(1) brightness(1.05);
+	filter: saturate(1) brightness(1.05);
 }
 
 
@@ -121,94 +127,58 @@ main {
 	justify-content: center;
 	position: fixed;
 	z-index: 2000;
-	left: 0; top: 0; width: 100vw; height: 100vh;
-	background: rgba(0,0,0,0.5);
+	left: 0;
+	top: 0;
+	width: 100vw;
+	height: 100vh;
+	background: rgba(0, 0, 0, 0.5);
 	padding: 4vw;
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
 }
 
 .modal[hidden] {
-  display: none;
+	display: none;
 }
 
 .modal-content {
-  background-color: #fffdfa;
-  border: 1.5px solid #d2b48c;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-  font-family: 'Courier New', Courier, monospace;
-  border-radius: 0;
-  aspect-ratio: 5 / 3;
-  width: clamp(320px, 60vw, 600px);
-  max-width: 98vw;
-  display: flex;
-  flex-direction: column;
-	justify-content: flex-start;
-  align-items: flex-start;
-  padding: 2em 2em;
-  margin: min(4vw, 32px) auto 0 auto;
-	line-height: 1.5;
+	position: relative;
+	/* ...other styles... */
 }
 
-.modal-close {
-  position: absolute;
-  top: 0.5em; right: 0.5em;
-  font-size: 2em;
-  color: #888;
-  cursor: pointer;
-	font-family: inherit;
-	background: none;
-	border: none;
-	line-height: 1;
-	padding: 0;
-	transition: color 0.2s;
+.modal-image {
+	display: block;
+	max-width: 90vw;
+	max-height: 80vh;
+	height: auto;
+	border-radius: 0px;
+	filter: brightness(1.05);
+	box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    0 0 24px 4px rgba(255,255,255,0.18);
 }
-
-.modal-close:hover {
-	color: #b71c1c;
-}
-
-
-/* Card details styling */
-#modal-title {
-	font-size: 1.3em;
-	font-weight: bold;
-	margin-top: 0em;
-	margin-bottom: 0.5em;
-	letter-spacing: 0.02em;
-}
-
-.modal-content p {
-	margin: 0.4em 0;
-	font-size: 1em;
-	letter-spacing: 0.01em;
-}
-
-.modal-content strong {
-	color: #795548;
-	font-weight: 600;
-}
-
 
 /* Page header and its widgets */
 
 .page-header,
 #books-grid {
-    max-width: 1320px;
-    margin-inline: auto;
+	max-width: 1320px;
+	margin-inline: auto;
 }
 
 .page-header {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+	position: sticky;
+	top: 0;
+	z-index: 1000;
 
-    margin-bottom: 40px;
-     padding: 8px 50px 12px;
-    text-align: center;
+	margin-bottom: 40px;
+	padding: 8px 50px 12px;
+	text-align: center;
 
-    background: rgba(43, 43, 43, 0.88);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+	background: rgba(43, 43, 43, 0.88);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.10);
 }
 
 .page-header h1 {
@@ -222,8 +192,9 @@ main {
 .search-box {
 	display: flex;
 	justify-content: center;
-	align-items: stretch; /* make children match height */
-    gap: 10px;
+	align-items: stretch;
+	/* make children match height */
+	gap: 10px;
 }
 
 .search-input {
@@ -249,44 +220,46 @@ main {
 }
 
 .shuffle-btn {
-    padding: 0 6px;          /* no box look, but keeps click area usable */
-    margin-left: 0;
-    background: transparent;
-    border: none;
-    border-radius: 0;
-    color: #f7f7f7;          /* brighter than background */
-    cursor: pointer;
-    opacity: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+	padding: 0 6px;
+	/* no box look, but keeps click area usable */
+	margin-left: 0;
+	background: transparent;
+	border: none;
+	border-radius: 0;
+	color: #f7f7f7;
+	/* brighter than background */
+	cursor: pointer;
+	opacity: 1;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .shuffle-btn svg {
-    width: 30px;
-    height: 30px;
-    display: block;
+	width: 30px;
+	height: 30px;
+	display: block;
 }
 
 .shuffle-btn .die-face {
-    fill: #bcbcbc;
-    stroke: #c6c6c6;
-    stroke-width: 2;
+	fill: #bcbcbc;
+	stroke: #c6c6c6;
+	stroke-width: 2;
 }
 
 .shuffle-btn .die-pip {
-    fill: #3a3a3a;
+	fill: #3a3a3a;
 }
 
 .shuffle-btn:hover {
-    transform: rotate(-12deg) scale(1.08);
+	transform: rotate(-12deg) scale(1.08);
 }
 
 .shuffle-btn:hover .die-face {
-    fill: #d7d7d7;
-    stroke: #eeeeee;
+	fill: #d7d7d7;
+	stroke: #eeeeee;
 }
 
 .shuffle-btn:hover .die-pip {
-    fill: #222222;
+	fill: #222222;
 }
