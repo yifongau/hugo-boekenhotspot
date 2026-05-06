@@ -116,19 +116,20 @@ function initializeBooksGrid(booksGridId) {
         const title = book.rawMetadata.metadata.title;
         const author = book.creatorString;
         const ext = book.ext;
-        const img = book.imageFilePath
+        const ebook = book.bookFilePath;
+        const img = book.imageFilePath;
 
 
 
 
         // Show modal first (so the user sees it immediately)
         document.getElementById('book-modal').hidden = false;
-        document.getElementById('modal-download').href = book.bookFilePath;
-        document.getElementById('modal-image').src = book.imageFilePath;
+        document.getElementById('modal-download').href = ebook
+        document.getElementById('modal-image').src = img;
         document.getElementById('modal-btn-file-ext').textContent = ext;
 
         // Fetch the file size and update the DOM when ready
-        fetch(book.bookFilePath, { method: 'HEAD' })
+        fetch(ebook, { method: 'HEAD' })
             .then(res => {
                 const sizeBytes = res.headers.get('Content-Length');
                 let size = null;
@@ -143,20 +144,38 @@ function initializeBooksGrid(booksGridId) {
 
     // Flip modal image to reveal metadata card
     document.addEventListener('DOMContentLoaded', function () {
+        const front = document.getElementById('modal-card-front');
+        const back = document.getElementById('modal-card-back');
         const modalImage = document.getElementById('modal-image');
-        if (modalImage) {
-            modalImage.addEventListener('click', function () {
-                modalImage.classList.toggle('flipped');
+
+        if (modalImage && front && back) {
+            console.log("3 conditions");
+            front.addEventListener('click', function () {
+                console.log("Front.");
+                front.style.visibility = 'hidden';
+                back.hidden = false;
+            });
+            back.addEventListener('click', function () {
+                console.log("Back");
+                front.style.visibility = 'visible';
+                back.hidden = true;
             });
         }
-        // ... your other modal and navbar event listeners ...
     });
 
-    // Close modal on background click
+    // Close modal on background click and flip back modal
     document.addEventListener('DOMContentLoaded', function () {
+        const front = document.getElementById('modal-card-front');
+        const back = document.getElementById('modal-card-back');
         const modal = document.getElementById('book-modal');
+
         modal.addEventListener('click', (e) => {
-            if (e.target === modal) modal.hidden = true;
+            if (e.target === modal) {
+                modal.hidden = true;
+                front.style.visibility = 'visible';
+                back.hidden = true;
+            }
+            
         });
 
         const navbar = document.getElementById('modal-navbar');
@@ -164,6 +183,8 @@ function initializeBooksGrid(booksGridId) {
             // Only close if the click is directly on the navbar, not on a button/link inside it
             if (e.target === navbar) {
                 modal.hidden = true;
+                front.style.visibility = 'visible';
+                back.hidden = true;
             }
         });
     });

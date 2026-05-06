@@ -46,8 +46,18 @@
 		<div id="books-grid"></div>
 		<div id="book-modal" class="modal" hidden>
 			<div class="modal-content">
-				<img id="modal-image" class="modal-image" src="" alt="Boekomslag" />
-				<!-- ...details... -->
+				<div class="modal-image-card">
+					<div class="modal-card-front" id="modal-card-front">
+						<img id="modal-image" class="modal-image" src="" alt="Boekomslag" />
+					</div>
+					<div class="modal-card-back" id="modal-card-back" hidden>
+						<div class="meta-title" id="modal-flipcard-title">Test</div>
+						<div class="meta-author" id="modal-flipcard-author">Testing</div>
+					</div>
+				</div>
+
+
+
 			</div>
 			<div id="modal-navbar" class="modal-navbar">
 
@@ -62,7 +72,7 @@
 					<a class="modal-nav-btn file-info" id="modal-file-info" title="Boek metadata" aria-label="File info"
 						href="INFO_URL" target="_blank" rel="noopener">
 						<span class="file-info">
-							<span id="modal-btn-file-ext">.pdf</span>
+							<span id="modal-btn-file-ext"></span>
 							<span id="modal-btn-file-size"></span>
 						</span>
 					</a>
