@@ -176,18 +176,76 @@ img.icon-filter {
 }
 
 .modal-card-back {
-  background: #fff;
+  background: #fffbe6; /* soft, slightly yellowed paper */
   box-shadow: 0 8px 32px rgba(0,0,0,0.10);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
   color: #222;
-  /* No min-height or padding for now */
-  /* Remove any fixed width/height */
+  font-family: 'Segoe UI', 'Arial', sans-serif;
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 2.2em 2em 2em 3em;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Blue margin line on the left */
+.modal-card-back::before {
+  content: "";
+  position: absolute;
+  height: 100%;
+  left: 2em;
+  top: 0em;
+  bottom: 0em;
+  width: 3px;
+  background: #3b82f6;
+  border-radius: 2px;
+  opacity: 0.5;
+  z-index: 1;
+}
+
+/* Horizontal ruled lines */
+.modal-card-back::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 27px,
+    #ece5c7 28px,
+    transparent 29px
+  );
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.7;
+}
+
+/* Metadata text styling */
+#modal-card-back-title {
+  font-size: 1.25em;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+  margin-left: 0.5em;
+  z-index: 2;
+}
+#modal-card-back-author {
+  font-size: 1.05em;
+  font-style: italic;
+  margin-bottom: 1.2em;
+  margin-left: 0.5em;
+  z-index: 2;
+}
+.meta-field {
+  font-size: 0.98em;
+  margin-bottom: 0.5em;
+  margin-left: 0.5em;
+  z-index: 2;
 }
 
 .modal-navbar {

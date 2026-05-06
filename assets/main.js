@@ -123,10 +123,16 @@ function initializeBooksGrid(booksGridId) {
 
 
         // Show modal first (so the user sees it immediately)
+
+        // Modal front 
         document.getElementById('book-modal').hidden = false;
         document.getElementById('modal-download').href = ebook
         document.getElementById('modal-image').src = img;
         document.getElementById('modal-btn-file-ext').textContent = ext;
+
+        // Modal back
+        document.getElementById('modal-card-back-title').textContent = title;
+        document.getElementById('modal-card-back-author').textContent = author;
 
         // Fetch the file size and update the DOM when ready
         fetch(ebook, { method: 'HEAD' })
