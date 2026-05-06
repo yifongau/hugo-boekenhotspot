@@ -142,9 +142,10 @@ main {
 }
 
 .modal-content {
-	position: relative;
-	/* ...other styles... */
+  position: relative;
+  padding-bottom: 5em; /* Reserve space for navbar, adjust as needed */
 }
+
 
 .modal-image {
 	display: block;
@@ -154,8 +155,21 @@ main {
 	border-radius: 0px;
 	filter: brightness(1.05);
 	box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.12),
-    0 0 24px 4px rgba(255,255,255,0.18);
+		0 8px 32px rgba(0, 0, 0, 0.12),
+		0 0 24px 4px rgba(255, 255, 255, 0.18);
+	position: relative;
+}
+
+.modal-navbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 1.5em;      /* Distance from bottom in em */
+  z-index: 2100;
+  display: flex;
+  justify-content: center;
+  gap: 2em;           /* Gap between buttons */
+  padding: 0.75em 3em 1em 3em;
 }
 
 /* Page header and its widgets */

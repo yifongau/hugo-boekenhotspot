@@ -122,17 +122,25 @@ function initializeBooksGrid(booksGridId) {
      //   document.getElementById('modal-author').textContent = author;
      //   document.getElementById('modal-formats').textContent = ext;
         document.getElementById('book-modal').hidden = false;
+        document.getElementById('modal-download').href = book.bookFilePath;
 
         document.getElementById('modal-image').src = book.imageFilePath;
 
     });
 
-    // Close modal on X or background click
+    // Close modal on background click
     document.addEventListener('DOMContentLoaded', function () {
         const modal = document.getElementById('book-modal');
-        const closeBtn = document.getElementById('modal-close');
         modal.addEventListener('click', (e) => {
             if (e.target === modal) modal.hidden = true;
+        });
+
+        const navbar = document.getElementById('modal-navbar');
+        navbar.addEventListener('click', (e) => {
+            // Only close if the click is directly on the navbar, not on a button/link inside it
+            if (e.target === navbar) {
+                modal.hidden = true;
+            }
         });
     });
 
