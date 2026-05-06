@@ -142,8 +142,9 @@ main {
 }
 
 .modal-content {
-  position: relative;
-  padding-bottom: 5em; /* Reserve space for navbar, adjust as needed */
+	position: relative;
+	padding-bottom: 5em;
+	/* Reserve space for navbar, adjust as needed */
 }
 
 
@@ -161,15 +162,113 @@ main {
 }
 
 .modal-navbar {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 1.5em;      /* Distance from bottom in em */
-  z-index: 2100;
-  display: flex;
-  justify-content: center;
-  gap: 2em;           /* Gap between buttons */
-  padding: 0.75em 3em 1em 3em;
+	position: fixed;
+	left: 0;
+	right: 0;
+	bottom: 1.5em;
+	/* Distance from bottom in em */
+	z-index: 2100;
+	display: flex;
+	justify-content: center;
+	gap: 2em;
+	/* Gap between buttons */
+	padding: 0.75em 3em 1em 3em;
+}
+
+.modal-nav-btns {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 0;
+	/* No gap so it looks like one button */
+	padding: 0;
+	background: #232323;
+	border-radius: 7px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
+	overflow: hidden;
+	border: 1px solid rgba(255, 255, 255, 0.10);
+	width: fit-content;
+	margin: 0 auto;
+}
+
+.modal-nav-btn {
+	flex: 1 1 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 0;
+	padding: 0.32em 1em; /* Use 1em for equal horizontal spacing */
+	background: none;
+	border: none;
+	text-decoration: none;
+	color: #bfc2c7;
+	font-size: 0.82rem;
+	font-family: inherit;
+	transition: background 0.18s, color 0.18s;
+	cursor: pointer;
+	outline: none;
+}
+
+.modal-nav-btn.file-info {
+	flex: 2 1 0;
+	font-weight: 500;
+	font-size: 0.82rem;
+}
+
+.modal-nav-btn:not(:last-child) {
+	border-right: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+/* Remove underline and blue color from links */
+.modal-nav-btn,
+.modal-nav-btn:visited,
+.modal-nav-btn:active {
+	color: #bfc2c7;
+	text-decoration: none;
+}
+
+/* Hover/focus effect for icons and text only */
+.modal-nav-btn:hover,
+.modal-nav-btn:focus {
+	background: #2b2b2b;
+	color: #fffbe6;
+}
+
+.modal-nav-btn .read-icon svg,
+.modal-nav-btn .download-icon svg {
+	stroke: #bfc2c7;
+	width: 20px;
+	height: 20px;
+	transition: filter 0.2s, transform 0.2s, stroke 0.2s;
+}
+
+.modal-nav-btn:hover .read-icon svg,
+.modal-nav-btn:focus .read-icon svg,
+.modal-nav-btn:hover .download-icon svg,
+.modal-nav-btn:focus .download-icon svg {
+	filter:
+		drop-shadow(0 0 18px #fffbe6ee) drop-shadow(0 0 6px #fffbe6cc) drop-shadow(0 0 2px #fffbe6);
+	transform: scale(1.10);
+	stroke: #fffbe6;
+}
+
+.file-info {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	gap: 0.2em;
+	color: #bfc2c7;
+	font-size: inherit;
+	font-family: inherit;
+	font-weight: 500;
+	text-shadow: none;
+}
+
+.modal-nav-btn:hover .file-info,
+.modal-nav-btn:focus .file-info {
+	color: #fffbe6;
 }
 
 /* Page header and its widgets */

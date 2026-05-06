@@ -51,20 +51,41 @@
 			</div>
 			<div id="modal-navbar" class="modal-navbar">
 
-				<a class="modal-nav-btn download" id="modal-download" title="Download" aria-label="Download" href="#"
-					target="_blank" rel="noopener">
-					<button class="modal-nav-btn" title="Download" aria-label="Download">
-						<!-- Download icon SVG -->
-						<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"
-							stroke-linecap="round" stroke-linejoin="round">
-							<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-							<polyline points="7 10 12 15 17 10" />
-							<line x1="12" y1="15" x2="12" y2="3" />
-						</svg>
-					</button>
+				<div class="modal-nav-btns">
+					<a class="modal-nav-btn read" id="modal-read" title="Boek lezen in browser" aria-label="Read" href="READ_URL"
+						target="_blank" rel="noopener">
+						<span class="read-icon">
+							<!-- SVG for read -->
+							<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"
+								stroke-linecap="round" stroke-linejoin="round">
+								<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+								<polyline points="7 10 12 15 17 10" />
+								<line x1="12" y1="15" x2="12" y2="3" />
+							</svg>
+						</span>
+					</a>
+					<a class="modal-nav-btn file-info" id="modal-file-info" title="Boek metadata" aria-label="File info"
+						href="INFO_URL" target="_blank" rel="noopener">
+						<span class="file-info">
+							<span id="modal-btn-file-ext">.pdf</span>
+							<span id="modal-btn-file-size">2.3mb</span>
+						</span>
+					</a>
+					<a class="modal-nav-btn download" id="modal-download" title="Boek downloaden" aria-label="Download"
+						href="DOWNLOAD_URL" target="_blank" rel="noopener">
+						<span class="download-icon">
+							<!-- SVG for download -->
+									<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"
+								stroke-linecap="round" stroke-linejoin="round">
+								<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+								<polyline points="7 10 12 15 17 10" />
+								<line x1="12" y1="15" x2="12" y2="3" />
+							</svg>
+						</span>
+					</a>
+				</div>
 
-
-				</a>
+		
 
 			</div>
 		</div>
