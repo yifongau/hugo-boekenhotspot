@@ -135,9 +135,21 @@ function initializeBooksGrid(booksGridId) {
                 if (sizeBytes) {
                     size = (parseInt(sizeBytes, 10) / 1048576).toFixed(2); // MB as string
                     document.getElementById('modal-btn-file-size').textContent = `${size}MB`;
-                } 
+                }
             });
 
+    });
+
+
+    // Flip modal image to reveal metadata card
+    document.addEventListener('DOMContentLoaded', function () {
+        const modalImage = document.getElementById('modal-image');
+        if (modalImage) {
+            modalImage.addEventListener('click', function () {
+                modalImage.classList.toggle('flipped');
+            });
+        }
+        // ... your other modal and navbar event listeners ...
     });
 
     // Close modal on background click

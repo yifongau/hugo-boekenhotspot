@@ -16,7 +16,7 @@ main {
 }
 
 img.icon-filter {
-  filter: invert(1) brightness(1);
+	filter: invert(1) brightness(1);
 }
 
 
@@ -163,6 +163,14 @@ img.icon-filter {
 		0 8px 32px rgba(0, 0, 0, 0.12),
 		0 0 24px 4px rgba(255, 255, 255, 0.18);
 	position: relative;
+
+	transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+	transform-style: preserve-3d;
+	cursor: pointer;
+}
+
+.modal-image.flipped {
+  transform: rotateY(180deg);
 }
 
 .modal-navbar {
@@ -201,7 +209,8 @@ img.icon-filter {
 	align-items: center;
 	justify-content: center;
 	min-width: 0;
-	padding: 0.32em 1em; /* Use 1em for equal horizontal spacing */
+	padding: 0.32em 1em;
+	/* Use 1em for equal horizontal spacing */
 	background: none;
 	border: none;
 	text-decoration: none;
@@ -269,7 +278,7 @@ img.icon-filter {
 }
 
 .modal-nav-btn img.icon-filter:hover {
-  filter: invert(70%) sepia(100%) saturate(500%) hue-rotate(10deg) brightness(1.1);
+	filter: invert(70%) sepia(100%) saturate(500%) hue-rotate(10deg) brightness(1.1);
 }
 
 /* Page header and its widgets */
