@@ -216,7 +216,7 @@ img.icon-filter {
 .modal-nav-btn.file-info {
 	flex: 2 1 0;
 	font-weight: 500;
-	font-size: 0.82rem;
+	font-size: 0.9em;
 }
 
 .modal-nav-btn:not(:last-child) {
@@ -234,7 +234,6 @@ img.icon-filter {
 /* Hover/focus effect for icons and text only */
 .modal-nav-btn:hover,
 .modal-nav-btn:focus {
-	background: #2b2b2b;
 	color: #fffbe6;
 }
 
@@ -246,33 +245,31 @@ img.icon-filter {
 	transition: filter 0.2s, transform 0.2s, stroke 0.2s;
 }
 
-.modal-nav-btn:hover .read-icon svg,
-.modal-nav-btn:focus .read-icon svg,
-.modal-nav-btn:hover .download-icon svg,
-.modal-nav-btn:focus .download-icon svg {
-	filter:
-		drop-shadow(0 0 18px #fffbe6ee) drop-shadow(0 0 6px #fffbe6cc) drop-shadow(0 0 2px #fffbe6);
-	transform: scale(1.10);
-	stroke: #fffbe6;
-}
 
 .file-info {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
+	height: 100%;
 	width: 100%;
-	gap: 0.2em;
+	gap: 0.5em;
 	color: #bfc2c7;
+	color: #fff;
 	font-size: inherit;
 	font-family: inherit;
-	font-weight: 500;
 	text-shadow: none;
+	padding-left: 0.9em;
+	padding-right: 0.9em;
 }
 
 .modal-nav-btn:hover .file-info,
 .modal-nav-btn:focus .file-info {
 	color: #fffbe6;
+}
+
+.modal-nav-btn img.icon-filter:hover {
+  filter: invert(70%) sepia(100%) saturate(500%) hue-rotate(10deg) brightness(1.1);
 }
 
 /* Page header and its widgets */
