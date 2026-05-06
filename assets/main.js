@@ -118,13 +118,25 @@ function initializeBooksGrid(booksGridId) {
         const ext = book.ext;
         const img = book.imageFilePath
 
-     //   document.getElementById('modal-title').textContent = title;
-     //   document.getElementById('modal-author').textContent = author;
-     //   document.getElementById('modal-formats').textContent = ext;
+
+
+
+        // Show modal first (so the user sees it immediately)
         document.getElementById('book-modal').hidden = false;
         document.getElementById('modal-download').href = book.bookFilePath;
-
         document.getElementById('modal-image').src = book.imageFilePath;
+        document.getElementById('modal-btn-file-ext').textContent = ext;
+
+        // Fetch the file size and update the DOM when ready
+        fetch(book.bookFilePath, { method: 'HEAD' })
+            .then(res => {
+                const sizeBytes = res.headers.get('Content-Length');
+                let size = null;
+                if (sizeBytes) {
+                    size = (parseInt(sizeBytes, 10) / 1048576).toFixed(2); // MB as string
+                    document.getElementById('modal-btn-file-size').textContent = `${size}MB`;
+                } 
+            });
 
     });
 

@@ -216,7 +216,7 @@ img.icon-filter {
 .modal-nav-btn.file-info {
 	flex: 2 1 0;
 	font-weight: 500;
-	font-size: 0.9em;
+	font-size: 0.8em;
 }
 
 .modal-nav-btn:not(:last-child) {
@@ -259,8 +259,8 @@ img.icon-filter {
 	font-size: inherit;
 	font-family: inherit;
 	text-shadow: none;
-	padding-left: 0.9em;
-	padding-right: 0.9em;
+	padding-left: 1.6em;
+	padding-right: 1.6em;
 }
 
 .modal-nav-btn:hover .file-info,

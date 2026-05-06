@@ -53,8 +53,8 @@ This script makes the assumption that every ebook file
   {{- $entry := index $byKey $key -}}
 
 
-	{{/* Book file: sanitize path, publish, store permalink and file extension */}}
-    {{- if findRE $bookExtRegex .Name -}}
+	{{/* Book file: get size in MBs, sanitize path, store permalink and file extension */}}
+    {{- if findRE $bookExtRegex .Name -}} 
       {{- $safeAssetPath := replace .Name "%" "%25" -}}
       {{- $publishedBook := resources.Copy $safeAssetPath . -}}
       {{- $ext := path.Ext $publishedBook.RelPermalink -}}
@@ -65,7 +65,7 @@ This script makes the assumption that every ebook file
       {{- $entry = merge $entry (dict "id" $id) -}}
     {{- end -}}
 
-	{{/* Book covers: sanitize path, publish, store permalink */}}
+	{{/* Book covers: sanitize path, store permalink */}}
     {{- if findRE $imageExtRegex .Name -}}
 
 	  {{/* Convert to WebP and cap at 480w */}}
