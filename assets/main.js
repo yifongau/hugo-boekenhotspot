@@ -116,10 +116,14 @@ function initializeBooksGrid(booksGridId) {
         const link = event.target.closest(".book-card");
         if (!link) return;
         event.preventDefault();
+        const id = link.dataset.id;
+        const book = bookMap[id]
+        console.log(book);
 
-        const title = "De bijbel";;
-        const author = "Jan Janssen";
-        const ext = link.dataset.ext;
+
+        const title = book.rawMetadata.metadata.title;
+        const author = book.creatorString;
+        const ext = book.ext;
 
         document.getElementById('modal-title').textContent = title;
         document.getElementById('modal-author').textContent = author;

@@ -4,8 +4,8 @@ export function createFuseIndex(books) {
     
     const options = {
         keys: [
-            "metadata.metadata.title",
-            "metadata.metadata.creator"
+            "rawMetadata.metadata.title",
+            "rawMetadata.metadata.creator.#text"
         ],
         threshold: 0.4, // adjust for fuzziness (lower = stricter)
         ignoreLocation: true,

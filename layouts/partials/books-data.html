@@ -51,8 +51,7 @@ This script makes the assumption that every ebook file
 
   {{/* Fetch current book */}}
   {{- $entry := index $byKey $key -}}
-  {{- $id := sha1 $key -}}
-  {{- $entry = merge $entry (dict "id" $id) -}}
+
 
 	{{/* Book file: sanitize path, publish, store permalink and file extension */}}
     {{- if findRE $bookExtRegex .Name -}}
@@ -60,6 +59,10 @@ This script makes the assumption that every ebook file
       {{- $publishedBook := resources.Copy $safeAssetPath . -}}
       {{- $ext := path.Ext $publishedBook.RelPermalink -}}
       {{- $entry = merge $entry (dict "bookFilePath" $publishedBook.RelPermalink "ext" $ext) -}}
+
+      {{/* Also save uid  */}}
+      {{- $id := sha1 $key -}}
+      {{- $entry = merge $entry (dict "id" $id) -}}
     {{- end -}}
 
 	{{/* Book covers: sanitize path, publish, store permalink */}}
@@ -82,8 +85,30 @@ This script makes the assumption that every ebook file
 
 	{{/* Book metadata: parse OPF XML and store parsed object */}}
     {{- if findRE $metadataExtRegex .Name -}}
-      {{- $parsedMetadata := transform.Unmarshal .Content -}}
-      {{- $entry = merge $entry (dict "metadata" $parsedMetadata) -}}
+      {{- $parsedRawMetadata := transform.Unmarshal .Content -}}
+      {{- $creators := slice -}}
+      {{- with $parsedRawMetadata.metadata.creator }}
+        {{- if (reflect.IsSlice .) -}}
+          {{- range . }}
+            {{- with (index . "#text") }}
+              {{- $creators = $creators | append . -}}
+            {{- end -}}
+          {{- end -}}
+        {{- else -}}
+          {{- with (index . "#text") }}
+            {{- $creators = $creators | append . -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+      {{- $creatorString := "" -}}
+      {{- if eq (len $creators) 2 -}}
+        {{- $creatorString = printf "%s & %s" (index $creators 0) (index $creators 1) -}}
+      {{- else if gt (len $creators) 2 -}}
+        {{- $creatorString = delimit $creators ", " -}}
+      {{- else if eq (len $creators) 1 -}}
+        {{- $creatorString = index $creators 0 -}}
+      {{- end -}}
+      {{- $entry = merge $entry (dict "rawMetadata" $parsedRawMetadata "creatorString" $creatorString) -}}
     {{- end -}}
 
 	 {{/* Write resulting entry into lookup map */}}
@@ -96,7 +121,7 @@ This script makes the assumption that every ebook file
   {{- if and 
 	(isset $entry "bookFilePath") 
 	(isset $entry "imageFilePath") 
-	(isset $entry "metadata") 
+	(isset $entry "rawMetadata") 
   -}}
 
   {{- $books = $books | append $entry -}}
@@ -108,7 +133,7 @@ This script makes the assumption that every ebook file
 	      $k 
 		  (isset $entry "bookFilePath") 
 		  (isset $entry "imageFilePath") 
-		  (isset $entry "metadata") 
+		  (isset $entry "rawMetadata") 
 	  -}}
 
   {{- end -}}
